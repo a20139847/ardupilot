@@ -5,6 +5,25 @@
 // Code to Write and Read packets from AP_Logger log memory
 // Code to interact with the user to dump or erase logs
 
+struct PACKED log_OpenMV {
+    LOG_PACKET_HEADER;
+    uint64_t time_us;
+    uint8_t cx;
+    uint8_t cy;
+};
+
+// Write an OpenMV packet
+void Copter::Log_Write_OpenMV()
+{
+    struct log_OpenMV pkt = {
+        LOG_PACKET_HEADER_INIT(LOG_OPENMV_MSG),
+        time_us         : AP_HAL::micros64(),
+        cx              : openmv.cx,
+        cy              : openmv.cy
+    };
+    logger.WriteBlock(&pkt, sizeof(pkt));
+}
+
 struct PACKED log_Control_Tuning {
     LOG_PACKET_HEADER;
     uint64_t time_us;
